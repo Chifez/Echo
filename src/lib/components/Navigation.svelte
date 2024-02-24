@@ -6,6 +6,7 @@
   import LogoGithub from 'carbon-icons-svelte/lib/LogoGithub.svelte';
   import CloseLarge from 'carbon-icons-svelte/lib/CloseLarge.svelte';
   import { Menu as hamburger } from '$lib/store';
+  import { goto } from '$app/navigation';
 </script>
 
 <nav
@@ -16,7 +17,7 @@
       <p
         class="text-xl font-bold bg-gradient-to-r from-[#C41740] to-[#EA9C28] inline-block text-transparent bg-clip-text"
       >
-        Echo.
+        <a href="/"> Echo. </a>
       </p>
       <button
         class="block md:hidden"
@@ -39,15 +40,30 @@
       >
         <div class="flex flex-col items-center justify-center space-y-4">
           <p>
-            <a href="/#">About</a>
+            <a
+              href="#about"
+              on:click={() => {
+                $hamburger.isOpen = !$hamburger.isOpen;
+              }}>About</a
+            >
           </p>
           <p>
-            <a href="/#">Posts</a>
+            <a
+              href="#posts"
+              on:click={() => {
+                $hamburger.isOpen = !$hamburger.isOpen;
+              }}>Posts</a
+            >
           </p>
         </div>
         <p>
-          <Button type="submit" class="h-fit text-lg rounded-full"
-            >Contact</Button
+          <Button
+            on:click={() => {
+              goto('/#contact');
+              $hamburger.isOpen = !$hamburger.isOpen;
+            }}
+            type="submit"
+            class="h-fit text-lg rounded-full">Contact</Button
           >
         </p>
         <div class="flex space-x-10 absolute bottom-6">
@@ -59,15 +75,19 @@
 
       <ul class="hidden md:flex items-center font-medium gap-8 justify-around">
         <div class="flex items-center space-x-4">
-          <li>
-            <a href="/#"> About</a>
-          </li>
-          <li>
-            <a href="/#"> Posts</a>
-          </li>
+          <p>
+            <a href="#about">About</a>
+          </p>
+          <p>
+            <a href="#posts">Posts</a>
+          </p>
         </div>
         <li>
-          <Button type="submit" class="h-fit rounded-full">Contact</Button>
+          <Button
+            on:click={() => goto('/#contact')}
+            type="submit"
+            class="h-fit text-lg rounded-full">Contact</Button
+          >
         </li>
       </ul>
     </span>

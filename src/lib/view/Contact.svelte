@@ -4,8 +4,11 @@
   import Textarea from '$lib/components/ui/textarea/textarea.svelte';
 </script>
 
-<section class="bg-gray-50 space-y-10 py-10 px-7 md:px-14">
-  <h1 class="text-4xl font-semibold text-center">Contact</h1>
+<section
+  id="contact"
+  class="bg-gray-50 min-h-full space-y-10 py-10 px-7 md:px-14"
+>
+  <h1 class="text-4xl font-semibold text-center mt-10">Contact</h1>
 
   <div class="space-y-4">
     <p class="w-full md:w-[60%]">

@@ -1,8 +1,11 @@
 <script>
 </script>
 
-<section class=" bg-gray-50 min-h-screen space-y-10 py-10 px-7 md:px-14">
-  <h1 class="text-4xl font-semibold text-center">About</h1>
+<section
+  id="about"
+  class=" bg-gray-50 min-h-full space-y-10 py-10 px-7 md:px-14"
+>
+  <h1 class="text-4xl font-semibold text-center mt-10">About</h1>
   <div class="flex flex-col items-center space-y-10 w-full md:w-[80%] mx-auto">
     <div class="size-36 rounded-full overflow-hidden border border-red-900">
       <img src="./corporate.jpg" alt="my logo" class="size-full" />
