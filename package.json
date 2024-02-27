@@ -30,10 +30,12 @@
 		"bits-ui": "^0.18.1",
 		"clsx": "^2.1.0",
 		"lucide-svelte": "^0.331.0",
+		"nodemailer": "^6.9.10",
 		"rehype-slug": "^6.0.0",
 		"remark-toc": "^9.0.0",
 		"remark-unwrap-images": "^4.0.0",
 		"shiki": "^1.1.5",
+		"svelte-email": "^0.0.4",
 		"tailwind-merge": "^2.2.1",
 		"tailwind-variants": "^0.2.0"
 	}

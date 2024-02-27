@@ -5,10 +5,10 @@
 
 <section
   style="background-image: url('./background.jpg')"
-  class="bg-center bg-cover w-full h-screen flex justify-center items-center"
+  class="bg-center bg-cover w-full min-h-screen flex justify-center items-center"
 >
   <div
-    class="w-full md:w-[50%] flex flex-col mt-10 items-center space-y-6 text-center px-7 md:px-14"
+    class="w-full md:w-[50%] flex flex-col mt-20 md:mt-10 items-center space-y-6 text-center py-4 px-7 md:px-14"
   >
     <div
       class=" border border-blue-100 rounded-full bg-[#F2F4F7] text-xs font-semibold text-center p-2"

@@ -11,15 +11,15 @@
   <h1 class="text-4xl font-semibold text-center mt-10">Contact</h1>
 
   <div class="space-y-4">
-    <p class="w-full md:w-[60%]">
-      if you have any questions about my blog post or would lke to collaborate
+    <p class="w-full md:w-[40%]">
+      If you have any questions about my blog post or would like to collaborate
       on a project,feel free to reach out to me using the contact form below
     </p>
     <form class="w-full md:w-[40%] space-y-4">
       <Input placeholder="Name" />
       <Input type="email" placeholder="Email" />
       <div class="grid w-full gap-2">
-        <Textarea placeholder="Type your message here." />
+        <Textarea placeholder="Type your message here." class="min-h-28" />
         <Button>Send message</Button>
       </div>
     </form>
