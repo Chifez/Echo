@@ -1,6 +1,29 @@
 <script>
   import { Input } from '$lib/components/ui/input';
   import { Button } from '$lib/components/ui/button';
+  import { PUBLIC_TO } from '$env/static/public';
+
+  let formData = '';
+
+  const handleSubmit = async () => {
+    if (!formData) return;
+    try {
+      const response = await fetch('/api/send-email', {
+        method: 'POST',
+        body: JSON.stringify({
+          from: formData,
+          to: PUBLIC_TO,
+          subject: `[New subscriber]`,
+          content: `
+          <p>${formData} just subscribed to your blog<p>
+          `,
+        }),
+      });
+      console.log(response);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 </script>
 
 <section
@@ -19,24 +42,26 @@
     <h1
       class="py-1 text-4xl font-inter font-bold bg-gradient-to-r from-[#C41740] to-[#EA9C28] inline-block text-transparent bg-clip-text"
     >
-      Echo: Learning,building and sharing Ideas
+      Echo: Learning,Building and Sharing Ideas
     </h1>
 
-    <p class="text-gray-300 w-full font-semibold text-center">
-      Welcome to Echo, where I share my adventures and lessons as a frontend
-      developer. Join me as I explore new technologies, tackle challenges, and
-      build exciting projects. From beginner tips to advanced concepts, Echo
-      offers a space for both learning and inspiration.
+    <p class="text-gray-300 w-full text-sm font-medium text-center">
+      Welcome to Echo,my name is emmanuel and this is where I share my
+      adventures and lessons as a frontend developer. Join me as I explore new
+      technologies, tackle challenges, and build exciting projects. From
+      beginner tips to advanced concepts, Echo offers a space for both learning
+      and inspiration.
     </p>
 
-    <div class="w-full md:w-[80%] pt-8 space-y-2">
-      <p class="text-gray-300 font-semibold">
+    <div class="w-full md:w-[80%] pt-8 space-y-4">
+      <p class="text-gray-300 font-medium text-sm w-[90%] text-center mx-auto">
         Sign up to get updates on my latest blog posts
       </p>
-      <form class="w-full flex items-center space-x-2">
+      <form class="w-full flex items-center space-x-2" on:submit={handleSubmit}>
         <Input
           type="email"
           placeholder="Email"
+          value={formData}
           class="py-5 rounded-full text-white caret-white"
         />
         <Button type="submit" class="p-3 h-fit rounded-full">Subscribe</Button>

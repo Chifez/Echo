@@ -10,9 +10,11 @@
 </script>
 
 <nav
-  class="px-7 md:px-14 flex items-center backdrop-blur-sm fixed top-0 w-full h-20"
+  class="px-7 md:px-14 flex items-center backdrop-blur-sm fixed top-0 w-full h-20 z-50"
 >
-  <div class="bg-gray-50 py-2 px-6 rounded-full w-full h-fit">
+  <div
+    class="bg-gray-50 py-2 px-6 rounded-full w-full md:w-[90%] h-fit mx-auto"
+  >
     <span class="flex items-center justify-between">
       <p
         class="text-xl font-bold bg-gradient-to-r from-[#C41740] to-[#EA9C28] inline-block text-transparent bg-clip-text"
@@ -73,25 +75,29 @@
         </div>
       </div>
       <!-- desktop nav links -->
-      <ul
-        class="hidden md:flex items-center font-semibold gap-8 justify-around"
-      >
-        <div class="flex items-center space-x-4">
-          <p>
-            <a href="#about">About</a>
-          </p>
-          <p>
-            <a href="#posts">Posts</a>
-          </p>
-        </div>
-        <li>
-          <Button
-            on:click={() => goto('/#contact')}
-            type="submit"
-            class="h-fit rounded-full">Contact</Button
-          >
-        </li>
-      </ul>
+
+      <div class="hidden md:flex items-center space-x-10 font-medium">
+        <p class="hover:bg-slate-200 rounded-full px-2 py-1">
+          <a href="#about">About</a>
+        </p>
+        <p class="hover:bg-slate-200 rounded-full px-2 py-1">
+          <a href="#posts">Posts</a>
+        </p>
+        <p class="hover:bg-slate-200 rounded-full px-2 py-1">
+          <a href="#posts">Contact</a>
+        </p>
+      </div>
+
+      <div class="hidden md:flex items-center gap-1">
+        <a href="https://www.github.com/Chifez4u" target="_blank">
+          <LogoGithub size={24} />
+        </a>
+        <Button
+          on:click={() => goto('/#contact')}
+          type="submit"
+          class="h-fit rounded-full">Download CV</Button
+        >
+      </div>
     </span>
   </div>
 </nav>

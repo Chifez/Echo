@@ -22,7 +22,7 @@
         body: JSON.stringify({
           from,
           to,
-          subject: `Contact message from ${name}`,
+          subject: `[New message]:Contact message from ${name}`,
           content,
         }),
       });

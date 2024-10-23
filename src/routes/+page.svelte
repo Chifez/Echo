@@ -5,6 +5,7 @@
   import Contact from '$lib/view/Contact.svelte';
   import Hero from '$lib/view/Hero.svelte';
   import Posts from '$lib/view/post/index.svelte';
+  import Work from '$lib/view/Work.svelte';
 
   export let data;
 </script>
@@ -18,6 +19,7 @@
 
   <Hero />
   <About />
+  <Work />
   <Posts postData={data} />
   <Contact />
 </div>

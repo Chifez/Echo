@@ -52,7 +52,7 @@
         </div>
 
         <a
-          href="/blog"
+          href="/#posts"
           class="flex font-medium items-center gap-2 text-slate-700 text-lg underline my-10"
         >
           Back to all posts
