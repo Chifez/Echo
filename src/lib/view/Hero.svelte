@@ -41,10 +41,10 @@
 
 <section
   style="background-image: url('./background.jpg')"
-  class="bg-center bg-cover w-full min-h-screen flex justify-center items-center"
+  class="bg-center bg-cover w-full h-screen lg:h-full lg:min-h-screen flex justify-center items-center"
 >
   <div
-    class="w-full md:w-[80%] lg:w-[50%] flex flex-col lg:mt-10 items-center space-y-6 text-center py-4 px-7 lg:px-14"
+    class=" w-full md:w-[80%] mt-5 lg:w-[50%] flex flex-col lg:mt-20 items-center space-y-6 text-center py-4 px-7 lg:px-14"
   >
     <a
       href="/#contact"
