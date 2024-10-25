@@ -7,6 +7,14 @@
   import CloseLarge from 'carbon-icons-svelte/lib/CloseLarge.svelte';
   import { Menu as hamburger } from '$lib/store';
   import { goto } from '$app/navigation';
+
+  const downloadCV = () => {
+    const link = document.createElement('a');
+    link.href =
+      'https://docs.google.com/document/d/1iGeSujz4xtPuaIRFoLJfPJhe6XvzI-eH1HyTXI2UPKU//export?format=pdf';
+    link.download = 'Emmanuel_Resume';
+    link.click();
+  };
 </script>
 
 <nav
@@ -84,7 +92,7 @@
           <a href="#posts">Posts</a>
         </p>
         <p class="hover:bg-slate-200 rounded-full px-2 py-1">
-          <a href="#posts">Contact</a>
+          <a href="#contact">Contact</a>
         </p>
       </div>
 
@@ -92,10 +100,8 @@
         <a href="https://www.github.com/Chifez4u" target="_blank">
           <LogoGithub size={24} />
         </a>
-        <Button
-          on:click={() => goto('/#contact')}
-          type="submit"
-          class="h-fit rounded-full">Download CV</Button
+        <Button on:click={downloadCV} class="h-fit rounded-full"
+          >Download CV</Button
         >
       </div>
     </span>

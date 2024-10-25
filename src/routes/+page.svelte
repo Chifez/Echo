@@ -16,13 +16,9 @@
 </svelte:head>
 <div>
   <Navigation />
-
   <Hero />
   <About />
   <Work />
   <Posts postData={data} />
   <Contact />
 </div>
-
-<style>
-</style>

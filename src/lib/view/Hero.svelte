@@ -4,10 +4,21 @@
   import { PUBLIC_TO } from '$env/static/public';
 
   let formData = '';
+  let isLoading = false;
 
   const handleSubmit = async () => {
-    if (!formData) return;
+    isLoading = true;
+
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (!formData || !emailPattern.test(formData)) {
+      alert('Please enter a valid email address.');
+      isLoading = false;
+      return;
+    }
+
     try {
+      console.log(formData);
       const response = await fetch('/api/send-email', {
         method: 'POST',
         body: JSON.stringify({
@@ -22,6 +33,8 @@
       console.log(response);
     } catch (error) {
       console.log(error);
+    } finally {
+      isLoading = false;
     }
   };
 </script>
@@ -58,14 +71,22 @@
       <p class="text-gray-300 font-medium text-sm w-[90%] text-center mx-auto">
         Sign up to get updates on my latest blog posts
       </p>
-      <form class="w-full flex items-center space-x-2" on:submit={handleSubmit}>
+      <form
+        class="w-full flex items-center space-x-2"
+        on:submit|preventDefault={handleSubmit}
+      >
         <Input
           type="email"
           placeholder="Email"
-          value={formData}
+          bind:value={formData}
           class="py-5 rounded-full text-white caret-white"
         />
-        <Button type="submit" class="p-3 h-fit rounded-full">Subscribe</Button>
+        <Button
+          disabled={isLoading}
+          type="submit"
+          class="p-3 h-fit rounded-full"
+          >{isLoading ? 'Sending' : 'Subscribe'}</Button
+        >
       </form>
     </div>
   </div>
