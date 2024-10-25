@@ -5,7 +5,7 @@
   let isOpen = false;
   export let selectedOption = 'experience';
 
-  const options = ['experience', 'work'];
+  const options = ['experience', 'projects', 'stack'];
 
   function selectOption(option) {
     selectedOption = option;
@@ -18,7 +18,7 @@
     on:click={() => (isOpen = !isOpen)}
     class="p-2 flex items-center justify-between w-40 min-w-20 border rounded-md"
   >
-    <p>
+    <p class="capitalize">
       {selectedOption}
     </p>
 

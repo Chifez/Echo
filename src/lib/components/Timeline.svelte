@@ -1,8 +1,12 @@
 <script lang="ts">
+  import { ContentDeliveryNetwork, LogoGithub } from 'carbon-icons-svelte';
+
   export let items: {
     name: string;
-    position: string;
-    date: string;
+    detail: string;
+    live?: string;
+    github?: string;
+    date?: string;
     description: string;
   }[] = [];
 </script>
@@ -26,9 +30,27 @@
             <div class="w-4 h-4 bg-blue-800 rounded-full z-50" />
           </div>
           <div>
-            <h1 class="text-lg font-bold text-blue-800">{card.name}</h1>
-            <h1 class="text-sm font-bold">{card.position}</h1>
-            <h1 class="text-sm">{card.date}</h1>
+            <div class="flex items-center gap-2">
+              <h1 class="text-lg font-bold text-blue-800 capitalize">
+                {card.name}
+              </h1>
+              <div class="flex items-center gap-2">
+                {#if card.github}
+                  <a href={card.github} target="_blank">
+                    <LogoGithub size={20} />
+                  </a>
+                {/if}
+                {#if card.live}
+                  <a href={card.live} target="_blank">
+                    <ContentDeliveryNetwork size={20} />
+                  </a>
+                {/if}
+              </div>
+            </div>
+            <h1 class="text-sm font-bold">{card.detail}</h1>
+            {#if card.date}
+              <h1 class="text-sm">{card.date}</h1>
+            {/if}
           </div>
         </div>
         <p class="text-base text-gray-500">

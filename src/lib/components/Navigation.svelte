@@ -22,7 +22,7 @@
         <a href="/"> Echo. </a>
       </p>
       <button
-        class="block md:hidden"
+        class="block lg:hidden"
         on:click={() => {
           $hamburger.isOpen = !$hamburger.isOpen;
         }}
@@ -34,7 +34,7 @@
         {/if}
       </button>
       <div
-        class={`z-10 text-lg overflow-hidden transition-all font-semibold absolute flex md:hidden flex-col items-center justify-center space-y-10 left-0 top-20  bg-gray-50 ${
+        class={`z-10 text-lg overflow-hidden transition-all font-semibold absolute flex lg:hidden flex-col items-center justify-center space-y-10 left-0 top-20  bg-gray-50 ${
           $hamburger.isOpen
             ? 'h-[calc(100vh-5rem)] w-screen'
             : 'h-0 w-0 opacity-0'
@@ -76,7 +76,7 @@
       </div>
       <!-- desktop nav links -->
 
-      <div class="hidden md:flex items-center space-x-10 font-medium">
+      <div class="hidden lg:flex items-center space-x-10 font-medium">
         <p class="hover:bg-slate-200 rounded-full px-2 py-1">
           <a href="#about">About</a>
         </p>
@@ -88,7 +88,7 @@
         </p>
       </div>
 
-      <div class="hidden md:flex items-center gap-1">
+      <div class="hidden lg:flex items-center gap-1">
         <a href="https://www.github.com/Chifez4u" target="_blank">
           <LogoGithub size={24} />
         </a>

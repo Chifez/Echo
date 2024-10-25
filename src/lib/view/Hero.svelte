@@ -31,13 +31,14 @@
   class="bg-center bg-cover w-full min-h-screen flex justify-center items-center"
 >
   <div
-    class="w-full md:w-[50%] flex flex-col mt-20 md:mt-10 items-center space-y-6 text-center py-4 px-7 md:px-14"
+    class="w-full md:w-[80%] lg:w-[50%] flex flex-col mt-20 md:mt-10 items-center space-y-6 text-center py-4 px-7 lg:px-14"
   >
-    <div
-      class=" border border-blue-100 rounded-full bg-[#F2F4F7] text-xs font-semibold text-center p-2"
+    <a
+      href="/#contact"
+      class=" border border-blue-100 rounded-full bg-[#F2F4F7] text-xs font-semibold text-center p-2 cursor-pointer"
     >
       <p>👋 Get in touch</p>
-    </div>
+    </a>
 
     <h1
       class="py-1 text-4xl font-inter font-bold bg-gradient-to-r from-[#C41740] to-[#EA9C28] inline-block text-transparent bg-clip-text"
@@ -46,14 +47,14 @@
     </h1>
 
     <p class="text-gray-300 w-full text-sm font-medium text-center">
-      Welcome to Echo,my name is emmanuel and this is where I share my
+      Welcome to Echo,my name is Emmanuel and this is where I share my
       adventures and lessons as a frontend developer. Join me as I explore new
       technologies, tackle challenges, and build exciting projects. From
       beginner tips to advanced concepts, Echo offers a space for both learning
       and inspiration.
     </p>
 
-    <div class="w-full md:w-[80%] pt-8 space-y-4">
+    <div class="w-full md:w-[70%] lg:w-[80%] pt-8 space-y-4">
       <p class="text-gray-300 font-medium text-sm w-[90%] text-center mx-auto">
         Sign up to get updates on my latest blog posts
       </p>
