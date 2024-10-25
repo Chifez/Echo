@@ -42,9 +42,9 @@
         {/if}
       </button>
       <div
-        class={`z-10 text-lg overflow-hidden transition-all font-semibold absolute flex lg:hidden flex-col items-center justify-center space-y-10 left-0 top-20  bg-gray-50 ${
+        class={` text-lg overflow-hidden transition-all font-semibold absolute flex lg:hidden flex-col items-center justify-center space-y-10 left-0 top-20  bg-gray-50 ${
           $hamburger.isOpen
-            ? 'h-[calc(100vh-5rem)] w-screen'
+            ? 'h-[calc(100dvh-5rem)] w-screen z-[1000]'
             : 'h-0 w-0 opacity-0'
         }`}
       >
@@ -66,16 +66,17 @@
             >
           </p>
         </div>
-        <p>
-          <Button
+        <p class="hover:bg-slate-200 rounded-full px-2 py-1">
+          <a
+            href="#contact"
             on:click={() => {
-              goto('/#contact');
               $hamburger.isOpen = !$hamburger.isOpen;
-            }}
-            type="submit"
-            class="h-fit text-lg rounded-full">Contact</Button
+            }}>Contact</a
           >
         </p>
+        <Button on:click={downloadCV} class="h-fit rounded-full"
+          >Download CV</Button
+        >
         <div class="flex space-x-10 absolute bottom-6">
           <LogoX size={32} />
           <LogoLinkedin size={32} />
