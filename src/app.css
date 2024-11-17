@@ -126,6 +126,14 @@ body {
   border-radius: 8px;
   tab-size: 2;
 }
+
+.prose a {
+  color: #5a9bd6;
+}
+
+.prose a:hover {
+  text-decoration: underline;
+}
 .prose blockquote {
   border-left: 4px solid gray;
   font-style: italic;

@@ -3,8 +3,6 @@
   import PostCard from './PostCard.svelte';
 
   export let postData;
-  // let posts = JSON.stringify(postData);
-  // let posts = new Array(4).fill(4);
 </script>
 
 <section id="posts" class="min-h-full space-y-10 py-10 px-7 md:px-14">

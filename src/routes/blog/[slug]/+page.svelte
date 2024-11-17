@@ -1,7 +1,5 @@
 <script lang="ts">
-  // import Chip from '$lib/Chip/Chip.svelte';
-  // import { formatDate } from '$lib/utils/formatDate';
-  // import { ChevronLeft } from 'carbon-icons-svelte';
+  import { ChevronLeft } from 'carbon-icons-svelte';
 
   export let data;
 </script>
@@ -26,7 +24,7 @@
         </p>
       </hgroup>
       <main class="mx-auto max-w-screen-md px-4 lg:px-8">
-        <!-- <div
+        <div
           class="flex items-center justify-start gap-4 my-2 border-y border-gray-200 py-4"
         >
           <img
@@ -38,23 +36,28 @@
             <p class="font-semibold">{data.meta.author}</p>
             <p class="text-gray-500">{data.meta.role}</p>
           </span>
-        </div> -->
+        </div>
 
         <!-- Post -->
         <div class="prose pt-2 pb-4 border-b border-gray-200">
           <svelte:component this={data.content} />
           <!-- Tags -->
-          <!-- <div class="flex gap-2 py-4">
+          <div class="flex gap-2 py-4">
             {#each data.meta.tags as tag}
-              <p>{tag}</p>
+              <div
+                class="text-xs bg-slate-300 h-fit w-fit rounded-full px-3 py-1"
+              >
+                {tag}
+              </div>
             {/each}
-          </div> -->
+          </div>
         </div>
 
         <a
           href="/#posts"
           class="flex font-medium items-center gap-2 text-slate-700 text-lg underline my-10"
         >
+          <ChevronLeft />
           Back to all posts
         </a>
       </main>
