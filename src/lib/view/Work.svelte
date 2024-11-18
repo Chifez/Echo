@@ -10,25 +10,32 @@
       detail: 'Frontend Engineer',
       date: 'July 2023 - Present',
       description:
-        'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Temporibus, et.',
+        'Open sourced AI driven Platform for schools or companies to streamline learning and tutoring',
     },
     {
       name: 'Uniflow',
       detail: 'Frontend Developer',
       date: 'April 2023 - March 2023',
       description:
-        'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Temporibus, et.',
+        'A decentralized platform for controlling financial assets and data',
     },
     {
       name: 'Schull Technologies',
       detail: 'Frontend Developer (Intern)',
       date: 'August 2022 - December 2022',
-      description:
-        'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Temporibus, et.',
+      description: 'IT consulting and E-learning',
     },
   ];
 
   const work = [
+    {
+      name: 'template starter',
+      detail: 'Nodejs, Javascript, YAML',
+      github: 'https://github.com/Chifez/cli-template-starter',
+      live:'https://www.npmjs.com/package/cli-template-starter',
+      description:
+        'A cli tool to scaffold boiler plate templates frameworks like nextjs,svelte etc., preconfiured with the basic settings skipping the hassle of going through several command prompts',
+    },
     {
       name: 'Echo',
       detail: 'Svelte, Typescript, Tailwind, Markdown',
