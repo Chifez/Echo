@@ -1,45 +1,61 @@
 <script>
-  import Button from '$lib/components/ui/button/button.svelte';
+  import { Button } from '$lib/components/ui/button';
   import PostCard from './PostCard.svelte';
+  import { createInfiniteQuery } from '@tanstack/svelte-query';
 
-  export let postData;
+  const POSTS_PER_PAGE = 6;
 
-  // Default number of posts to display
-  const DEFAULT_POSTS = 2;
-  let visiblePosts = [];
-  let showLoadMore = false;
+  const postsQuery = createInfiniteQuery({
+    queryKey: ['posts'],
+    queryFn: async ({ pageParam = 1 }) => {
+      const response = await fetch(
+        `/api/posts?page=${pageParam}&limit=${POSTS_PER_PAGE}`
+      );
+      if (!response.ok) {
+        throw new Error('Failed to fetch posts');
+      }
+      return response.json();
+    },
+    getNextPageParam: (lastPage) => {
+      if (lastPage.hasMore) {
+        return lastPage.posts.length / POSTS_PER_PAGE + 1;
+      }
+      return undefined;
+    },
+    initialPageParam: 1,
+  });
 
-  // Initialize visible posts and button visibility
-  $: {
-    visiblePosts = postData.posts.slice(0, DEFAULT_POSTS);
-    showLoadMore = postData.posts.length > DEFAULT_POSTS;
-  }
-
-  // Function to load more posts
-  function loadMore() {
-    const newCount = visiblePosts.length + DEFAULT_POSTS;
-    visiblePosts = postData.posts.slice(0, newCount);
-
-    // Hide the button if we've loaded all posts
-    if (visiblePosts.length >= postData.posts.length) {
-      showLoadMore = false;
-    }
-  }
+  $: posts = $postsQuery.data?.pages.flatMap((page) => page.posts) ?? [];
+  $: hasMore =
+    $postsQuery.data?.pages[$postsQuery.data.pages.length - 1]?.hasMore ??
+    false;
+  $: isLoading = $postsQuery.isLoading;
+  $: isError = $postsQuery.isError;
 </script>
 
 <section id="posts" class="min-h-full space-y-10 py-10 px-7 md:px-14">
   <h1 class="text-4xl font-semibold text-center mt-10">Posts</h1>
-  <div class="flex flex-col items-center gap-4">
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-      <!-- {JSON.stringify(postData)} -->
-      {#each visiblePosts as post}
-        <PostCard {post} />
-      {/each}
-    </div>
 
-    <!-- Conditionally show the button -->
-    {#if showLoadMore}
-      <Button on:click={loadMore}>Load more</Button>
-    {/if}
-  </div>
+  {#if isError}
+    <div class="text-center text-red-500">
+      Error loading posts. Please try again later.
+    </div>
+  {:else}
+    <div class="flex flex-col items-center gap-4">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        {#each posts as post}
+          <PostCard {post} />
+        {/each}
+      </div>
+
+      {#if hasMore}
+        <Button
+          on:click={() => $postsQuery.fetchNextPage()}
+          disabled={isLoading}
+        >
+          {isLoading ? 'Loading...' : 'Load more'}
+        </Button>
+      {/if}
+    </div>
+  {/if}
 </section>
