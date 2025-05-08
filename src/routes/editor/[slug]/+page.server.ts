@@ -1,10 +1,13 @@
 import { error } from '@sveltejs/kit';
 import { Post } from '$lib/models/post';
-import clientPromise from '$lib/mongodb';
+import clientPromise, { ensureMongooseConnection } from '$lib/mongodb';
 
 export async function load({ params }) {
   try {
-    await clientPromise;
+    await ensureMongooseConnection();
+
+    // Ensure MongoDB native client is connected (optional, as we're using Mongoose)
+    // await clientPromise;
     // Check if user is admin
     const post = await Post.findOne({ slug: params.slug });
 
