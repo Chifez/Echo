@@ -195,7 +195,7 @@ export async function POST({ request, locals }) {
       );
     }
 
-    if (error instanceof Error && error.code === 11000) {
+    if (error instanceof Error && error.message.includes('E11000')) {
       return json(
         {
           error:

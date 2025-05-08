@@ -69,25 +69,31 @@
     <Card class="p-6">
       <div class="space-y-4">
         <div>
-          <label class="block text-sm font-medium mb-2">Title</label>
-          <Input bind:value={title} placeholder="Enter post title" />
+          <label for="title" class="block text-sm font-medium mb-2">
+            Title
+          </label>
+          <Input bind:value={title} placeholder="Enter post title" id="title" />
         </div>
 
         <div>
-          <label class="block text-sm font-medium mb-2">Description</label>
+          <label for="description" class="block text-sm font-medium mb-2">
+            Description
+          </label>
           <Input
             bind:value={description}
             placeholder="Enter post description"
+            id="description"
           />
         </div>
 
         <div>
-          <label class="block text-sm font-medium mb-2"
-            >Tags (comma-separated)</label
-          >
+          <label for="tags" class="block text-sm font-medium mb-2">
+            Tags (comma-separated)
+          </label>
           <Input
             bind:value={tags}
             placeholder="e.g. javascript, web, tutorial"
+            id="tags"
           />
         </div>
       </div>

@@ -1,9 +1,12 @@
 import { json } from '@sveltejs/kit';
 import { Post } from '$lib/models/post';
-import clientPromise from '$lib/mongodb';
+import clientPromise, { ensureMongooseConnection } from '$lib/mongodb';
 
 export async function GET({ locals }) {
   try {
+    await ensureMongooseConnection();
+
+    // Ensure MongoDB native client is connected (optional, as we're using Mongoose)
     await clientPromise;
 
     // Check if user is admin

@@ -74,14 +74,22 @@
       <div class="space-y-4">
         <div class="flex flex-row items-center gap-2 w-full">
           <div>
-            <label class="block text-sm font-medium mb-2">Title</label>
-            <Input bind:value={title} placeholder="Enter post title" />
+            <label for="title" class="block text-sm font-medium mb-2">
+              Title
+            </label>
+            <Input
+              bind:value={title}
+              placeholder="Enter post title"
+              id="title"
+            />
           </div>
           <div>
-            <label class="block text-sm font-medium mb-2">Tags</label>
+            <label for="tags" class="block text-sm font-medium mb-2">Tags</label
+            >
             <Input
               bind:value={tags}
               placeholder="e.g. javascript, web, tutorial"
+              id="tags"
             />
           </div>
         </div>

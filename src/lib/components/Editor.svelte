@@ -639,7 +639,9 @@
 
   <div class="space-y-4">
     <div class="flex items-center gap-4">
-      <label class="text-sm font-medium">Banner Image</label>
+      <label for="banner-upload" class="text-sm font-medium">
+        Banner Image
+      </label>
       <input
         type="file"
         accept="image/*"
