@@ -1,13 +1,10 @@
 <script>
-  import Navigation from '$lib/components/Navigation.svelte';
-  import { Button } from '$lib/components/ui/button';
-  import About from '$lib/view/About.svelte';
-  import Contact from '$lib/view/Contact.svelte';
-  import Hero from '$lib/view/Hero.svelte';
+  import Navigation from '$lib/components/navigation.svelte';
+  import About from '$lib/view/about.svelte';
+  import Contact from '$lib/view/contact.svelte';
+  import Hero from '$lib/view/hero.svelte';
   import Posts from '$lib/view/post/index.svelte';
-  import Work from '$lib/view/Work.svelte';
-
-  export let data;
+  import Work from '$lib/view/work.svelte';
 </script>
 
 <svelte:head>
@@ -19,6 +16,6 @@
   <Hero />
   <About />
   <Work />
-  <Posts postData={data} />
+  <Posts />
   <Contact />
 </div>

@@ -1,5 +1,5 @@
 <script>
-  import Timeline from '$lib/components/Timeline.svelte';
+  import Timeline from '$lib/components/timeline.svelte';
   import Dropdown from '$lib/components/ui/dropdown/Dropdown.svelte';
 
   let display = 'experience';
@@ -32,7 +32,7 @@
       name: 'template starter',
       detail: 'Nodejs, Javascript, YAML',
       github: 'https://github.com/Chifez/cli-template-starter',
-      live:'https://www.npmjs.com/package/cli-template-starter',
+      live: 'https://www.npmjs.com/package/cli-template-starter',
       description:
         'A cli tool to scaffold boiler plate templates frameworks like nextjs,svelte etc., preconfiured with the basic settings skipping the hassle of going through several command prompts',
     },

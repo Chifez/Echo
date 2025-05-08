@@ -1,8 +1,10 @@
 <script lang="ts">
   import { Button } from '$lib/components/ui/button';
   import { Input } from '$lib/components/ui/input';
-  import Editor from '$lib/components/Editor.svelte';
+  import Editor from '$lib/components/editor.svelte';
   import { Card } from '$lib/components/ui/card';
+  import { Textarea } from '$lib/components/ui/textarea';
+  import { slugify } from '$lib/utils/helpers';
 
   let title = '';
   let description = '';
@@ -16,7 +18,7 @@
     try {
       isPublishing = true;
       error = '';
-
+      const slug = slugify(title);
       const response = await fetch('/api/posts', {
         method: 'POST',
         headers: {
@@ -27,6 +29,7 @@
           description,
           content,
           bannerImage,
+          slug,
           tags: tags.split(',').map((tag) => tag.trim()),
           author: 'Nwosu Emmanuel',
           avatar: '/corporate.jpg',
@@ -69,26 +72,27 @@
   <div class="space-y-6">
     <Card class="p-6">
       <div class="space-y-4">
-        <div>
-          <label class="block text-sm font-medium mb-2">Title</label>
-          <Input bind:value={title} placeholder="Enter post title" />
+        <div class="flex flex-row items-center gap-2 w-full">
+          <div>
+            <label class="block text-sm font-medium mb-2">Title</label>
+            <Input bind:value={title} placeholder="Enter post title" />
+          </div>
+          <div>
+            <label class="block text-sm font-medium mb-2">Tags</label>
+            <Input
+              bind:value={tags}
+              placeholder="e.g. javascript, web, tutorial"
+            />
+          </div>
         </div>
 
         <div>
-          <label class="block text-sm font-medium mb-2">Description</label>
-          <Input
+          <label for="description" class="block text-sm font-medium mb-2"
+            >Description</label
+          >
+          <Textarea
             bind:value={description}
             placeholder="Enter post description"
-          />
-        </div>
-
-        <div>
-          <label class="block text-sm font-medium mb-2"
-            >Tags (comma-separated)</label
-          >
-          <Input
-            bind:value={tags}
-            placeholder="e.g. javascript, web, tutorial"
           />
         </div>
       </div>

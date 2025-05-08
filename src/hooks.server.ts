@@ -9,7 +9,10 @@ const handleSession: Handle = async ({ event, resolve }) => {
   console.log('Request URL:', event.url.pathname);
 
   // Handle editor route protection
-  if (event.url.pathname.startsWith('/editor')) {
+  if (
+    event.url.pathname.startsWith('/editor') ||
+    event.url.pathname.startsWith('/admin')
+  ) {
     if (!session) {
       console.log('No session found, redirecting to login');
       throw redirect(303, '/login');

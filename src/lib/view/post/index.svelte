@@ -1,16 +1,31 @@
 <script>
   import { Button } from '$lib/components/ui/button';
   import PostCard from './PostCard.svelte';
+  import PostFilter from '$lib/components/post-filter.svelte';
   import { createInfiniteQuery } from '@tanstack/svelte-query';
 
   const POSTS_PER_PAGE = 6;
+  let filterParams = {
+    type: 'date',
+    date: 'newest',
+    tag: '',
+  };
 
   const postsQuery = createInfiniteQuery({
-    queryKey: ['posts'],
+    queryKey: ['posts', filterParams],
     queryFn: async ({ pageParam = 1 }) => {
-      const response = await fetch(
-        `/api/posts?page=${pageParam}&limit=${POSTS_PER_PAGE}`
-      );
+      const params = new URLSearchParams({
+        page: pageParam.toString(),
+        limit: POSTS_PER_PAGE.toString(),
+        ...filterParams,
+      });
+
+      const response = await fetch(`/api/posts?${params.toString()}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
       if (!response.ok) {
         throw new Error('Failed to fetch posts');
       }
@@ -30,32 +45,55 @@
     $postsQuery.data?.pages[$postsQuery.data.pages.length - 1]?.hasMore ??
     false;
   $: isLoading = $postsQuery.isLoading;
+  $: isPending = $postsQuery.isPending;
   $: isError = $postsQuery.isError;
+
+  /**
+   * @param {{ detail: { type: string; date: string; tag: string; }; }} event
+   */
+  function handleFilter(event) {
+    filterParams = event.detail;
+    $postsQuery.refetch();
+  }
+
+  // Extract unique tags from posts
+  $: tags = [...new Set(posts.flatMap((post) => post.tags || []))].filter(
+    Boolean
+  );
 </script>
 
 <section id="posts" class="min-h-full space-y-10 py-10 px-7 md:px-14">
   <h1 class="text-4xl font-semibold text-center mt-10">Posts</h1>
-
-  {#if isError}
-    <div class="text-center text-red-500">
-      Error loading posts. Please try again later.
-    </div>
+  {#if isLoading}
+    Loading...
   {:else}
-    <div class="flex flex-col items-center gap-4">
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-        {#each posts as post}
-          <PostCard {post} />
-        {/each}
-      </div>
+    {#if posts.length > 0}
+      <PostFilter {tags} on:filter={handleFilter} />
+    {:else}
+      <div class="text-center text-gray-500">No posts found.</div>
+    {/if}
 
-      {#if hasMore}
-        <Button
-          on:click={() => $postsQuery.fetchNextPage()}
-          disabled={isLoading}
-        >
-          {isLoading ? 'Loading...' : 'Load more'}
-        </Button>
-      {/if}
-    </div>
+    {#if isError}
+      <div class="text-center text-red-500">
+        Error loading posts. Please try again later.
+      </div>
+    {:else}
+      <div class="flex flex-col items-center gap-4">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+          {#each posts as post}
+            <PostCard {post} />
+          {/each}
+        </div>
+
+        {#if hasMore}
+          <Button
+            on:click={() => $postsQuery.fetchNextPage()}
+            disabled={isPending}
+          >
+            {isPending ? 'Loading...' : 'Load more'}
+          </Button>
+        {/if}
+      </div>
+    {/if}
   {/if}
 </section>

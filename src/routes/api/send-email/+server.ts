@@ -1,4 +1,4 @@
-import { sendEmail } from '$lib/email/sendEmail';
+import { sendEmail } from '$lib/email/send-email';
 
 export async function POST({ request }) {
   const { to, from, subject, content } = await request.json();
