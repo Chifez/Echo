@@ -17,17 +17,20 @@ export async function load({ params }) {
     if (!post) {
       throw error(404, `Post "${params.slug}" not found`);
     }
-
+    console.log('Post found:', post);
     return {
       content: post.content,
       meta: {
         title: post.title,
         description: post.description,
-        date: new Date(post.createdAt).toLocaleDateString('en-US', {
-          year: 'numeric',
-          month: 'long',
-          day: 'numeric',
-        }),
+        date: new Date(post.createdAt || post.date).toLocaleDateString(
+          'en-US',
+          {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+          }
+        ),
         author: post.author,
         avatar: post.avatar,
         role: post.role,

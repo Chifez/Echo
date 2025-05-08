@@ -126,8 +126,8 @@ const postSchema = new mongoose.Schema<IPost>(
     },
     avatar: String,
     role: String,
-    createdAt: { type: Date, default: Date.now },
-    updatedAt: { type: Date, default: Date.now },
+    // createdAt: { type: Date, default: Date.now },
+    // updatedAt: { type: Date, default: Date.now },
   },
   {
     // Automatically handle createdAt and updatedAt
@@ -139,9 +139,9 @@ const postSchema = new mongoose.Schema<IPost>(
 );
 
 // Add indexes for better performance
-postSchema.index({ title: 'text', content: 'text', tags: 1 });
-postSchema.index({ createdAt: -1 });
-postSchema.index({ slug: 1 }, { unique: true });
+// postSchema.index({ title: 'text', content: 'text', tags: 1 });
+// postSchema.index({ createdAt: -1 });
+// postSchema.index({ slug: 1 }, { unique: true });
 
 // Create or retrieve model
 let Post: IPost | any;
