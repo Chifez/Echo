@@ -32,32 +32,47 @@ export async function GET({ url, locals }) {
     const limit = parseInt(url.searchParams.get('limit') || '6');
     const filterType = url.searchParams.get('type') || 'date';
     const dateFilter = url.searchParams.get('date') || 'newest';
+    const categoryFilter = url.searchParams.get('category') || 'all';
     const tagFilter = url.searchParams.get('tag') || '';
+    const isAdmin = url.searchParams.get('admin') === 'true';
 
     console.log('Query Parameters:', {
       page,
       limit,
       filterType,
       dateFilter,
+      categoryFilter,
       tagFilter,
+      isAdmin,
     });
 
     const skip = (page - 1) * limit;
 
-    // Build the filter object - start with empty object to get all posts
-    const filter: PostFilter = {};
+    // Build the filter object
+    const filter: any = {};
 
-    // Only apply filters if they are explicitly set
-    if (filterType === 'tags' && tagFilter) {
+    // Apply category filter
+    if (categoryFilter !== 'all') {
+      filter.category = categoryFilter;
+    }
+
+    // Apply tag filter
+    if (tagFilter) {
       filter.tags = { $regex: tagFilter, $options: 'i' };
     }
 
-    // Build the sort object - default to newest first
-    const sort: PostSort = {
+    // Only show published posts for non-admin users
+    if (!isAdmin) {
+      filter.isPublished = true;
+    }
+
+    console.log('MongoDB Filter:', JSON.stringify(filter, null, 2));
+
+    // Build the sort object
+    const sort: any = {
       createdAt: dateFilter === 'oldest' ? 1 : -1,
     };
 
-    console.log('MongoDB Filter:', JSON.stringify(filter, null, 2));
     console.log('MongoDB Sort:', JSON.stringify(sort, null, 2));
 
     // Query the database
@@ -103,15 +118,15 @@ export async function POST({ request, locals }) {
     const data = await request.json();
     const {
       title,
-      description,
+      excerpt,
       slug: providedSlug,
+      category,
+      readTime,
       content,
-      bannerImage,
+      image,
       tags = [],
       isPublished = true,
       author,
-      avatar,
-      role,
     } = data;
 
     // Validate required fields
@@ -143,20 +158,21 @@ export async function POST({ request, locals }) {
     // Create new post
     const post = new Post({
       title,
-      description,
+      excerpt,
       slug,
       content,
-      bannerImage,
+      image,
+      category,
+      readTime,
       tags: Array.isArray(tags)
         ? tags
         : tags.split(',').map((tag: any) => tag.trim()),
       isPublished,
-      author: author || 'Anonymous',
-      avatar,
-      role,
-      // These will be set automatically due to timestamps: true
-      // createdAt: new Date(),
-      // updatedAt: new Date(),
+      author: {
+        name: author.name || 'Anonymous',
+        avatar: author.avatar || '/corporate.jpg',
+        role: author.role || 'Anonymous',
+      },
     });
 
     // Save to database with timeout

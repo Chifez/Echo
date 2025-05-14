@@ -1,92 +1,33 @@
-// import mongoose from 'mongoose';
-
-// const postSchema = new mongoose.Schema({
-//   title: {
-//     type: String,
-//     required: true,
-//   },
-//   description: {
-//     type: String,
-//     required: true,
-//   },
-//   content: {
-//     type: String,
-//     required: true,
-//   },
-//   bannerImage: {
-//     type: String,
-//     required: true,
-//   },
-//   images: [
-//     {
-//       url: String,
-//       alt: String,
-//       caption: String,
-//     },
-//   ],
-//   slug: {
-//     type: String,
-//     required: true,
-//     unique: true,
-//   },
-//   date: {
-//     type: Date,
-//     default: Date.now,
-//   },
-//   author: {
-//     type: String,
-//     required: true,
-//   },
-//   avatar: {
-//     type: String,
-//     required: true,
-//   },
-//   role: {
-//     type: String,
-//     required: true,
-//   },
-//   tags: [
-//     {
-//       type: String,
-//     },
-//   ],
-//   published: {
-//     type: Boolean,
-//     default: false,
-//   },
-// });
-
-// // Create slug from title
-// postSchema.pre('save', function (next) {
-//   if (this.isModified('title')) {
-//     this.slug = this.title
-//       .toLowerCase()
-//       .replace(/[^a-z0-9]+/g, '-')
-//       .replace(/(^-|-$)/g, '');
-//   }
-//   next();
-// });
-
-// export const Post = mongoose.models.Post || mongoose.model('Post', postSchema);
-
-// $lib/models/Post.ts
 import mongoose from 'mongoose';
 import { ensureMongooseConnection } from '$lib/mongodb';
 
 // Define the interface for our Post model
 interface IPost {
   title: string;
-  description?: string;
-  slug: string;
+  excerpt: string;
   content: string;
-  bannerImage?: string;
+  date: Date;
+  readTime: string;
+  category: 'development' | 'personal';
+  image: {
+    url: string;
+    publicId: string;
+  };
+  contentImages: Array<{
+    url: string;
+    publicId: string;
+  }>;
+  author: {
+    name: string;
+    avatar?: string;
+    role: string;
+  };
   tags: string[];
-  isPublished: boolean;
-  author: string;
-  avatar?: string;
-  role?: string;
+  slug: string;
   createdAt: Date;
   updatedAt: Date;
+  isPublished: boolean;
+  likesCount: number;
 }
 
 // Create the schema
@@ -98,11 +39,56 @@ const postSchema = new mongoose.Schema<IPost>(
       trim: true,
       maxlength: [100, 'Title cannot be more than 100 characters'],
     },
-    description: {
+    excerpt: {
       type: String,
+      required: [true, 'Excerpt is required'],
       trim: true,
-      maxlength: [500, 'Description cannot be more than 500 characters'],
+      maxlength: [500, 'Excerpt cannot be more than 500 characters'],
     },
+    content: {
+      type: String,
+      required: [true, 'Content is required'],
+    },
+    readTime: {
+      type: String,
+      required: [true, 'Read time is required'],
+    },
+    category: {
+      type: String,
+      required: [true, 'Category is required'],
+      enum: ['development', 'personal'],
+    },
+    image: {
+      url: {
+        type: String,
+        required: true,
+      },
+      publicId: {
+        type: String,
+        required: true,
+      },
+    },
+    contentImages: [
+      {
+        url: {
+          type: String,
+          required: true,
+        },
+        publicId: {
+          type: String,
+          required: true,
+        },
+      },
+    ],
+    author: {
+      name: {
+        type: String,
+        required: [true, 'Author name is required'],
+      },
+      avatar: String,
+      role: String,
+    },
+    tags: [{ type: String, trim: true }],
     slug: {
       type: String,
       required: [true, 'Slug is required'],
@@ -110,29 +96,17 @@ const postSchema = new mongoose.Schema<IPost>(
       trim: true,
       lowercase: true,
     },
-    content: {
-      type: String,
-      required: [true, 'Content is required'],
-    },
-    bannerImage: String,
-    tags: [{ type: String, trim: true }],
     isPublished: {
       type: Boolean,
-      default: false,
+      default: true,
     },
-    author: {
-      type: String,
-      required: [true, 'Author is required'],
+    likesCount: {
+      type: Number,
+      default: 0,
     },
-    avatar: String,
-    role: String,
-    // createdAt: { type: Date, default: Date.now },
-    // updatedAt: { type: Date, default: Date.now },
   },
   {
-    // Automatically handle createdAt and updatedAt
     timestamps: true,
-    // This will include virtuals when converting to JSON
     toJSON: { virtuals: true },
     toObject: { virtuals: true },
   }
@@ -142,12 +116,12 @@ const postSchema = new mongoose.Schema<IPost>(
 // postSchema.index({ title: 'text', content: 'text', tags: 1 });
 // postSchema.index({ createdAt: -1 });
 // postSchema.index({ slug: 1 }, { unique: true });
+// postSchema.index({ category: 1 });
 
 // Create or retrieve model
 let Post: IPost | any;
 
 try {
-  // Check if the model exists already to prevent "Cannot overwrite model" errors
   Post = mongoose.models.Post || mongoose.model<IPost>('Post', postSchema);
 } catch (e) {
   Post = mongoose.model<IPost>('Post', postSchema);

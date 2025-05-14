@@ -2,6 +2,27 @@ import { json } from '@sveltejs/kit';
 import { Post } from '$lib/models/post';
 import clientPromise, { ensureMongooseConnection } from '$lib/mongodb';
 
+interface ImageMetadata {
+  url: string;
+  publicId: string;
+}
+
+interface PostData {
+  title: string;
+  slug: string;
+  content: string;
+  excerpt: string;
+  category: string;
+  isPublished: boolean;
+  image: ImageMetadata;
+  contentImages: ImageMetadata[];
+  tags?: string[];
+  author?: {
+    name: string;
+    role: string;
+  };
+}
+
 export async function DELETE({ params, locals }) {
   try {
     await clientPromise;

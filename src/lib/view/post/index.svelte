@@ -40,6 +40,7 @@
     initialPageParam: 1,
   });
 
+  $: console.log('ui post', $postsQuery.data);
   $: posts = $postsQuery.data?.pages.flatMap((page) => page.posts) ?? [];
   $: hasMore =
     $postsQuery.data?.pages[$postsQuery.data.pages.length - 1]?.hasMore ??
@@ -67,17 +68,16 @@
   {#if isLoading}
     Loading...
   {:else}
-    {#if posts.length > 0}
-      <PostFilter {tags} on:filter={handleFilter} />
-    {:else}
-      <div class="text-center text-gray-500">No posts found.</div>
-    {/if}
-
-    {#if isError}
+    <PostFilter {tags} on:filter={handleFilter} />
+    {#if posts.length === 0 && isError}
       <div class="text-center text-red-500">
         Error loading posts. Please try again later.
       </div>
-    {:else}
+    {:else if posts.length === 0}
+      <div class="text-center text-gray-500">No posts found.</div>
+    {/if}
+
+    {#if posts.length > 0}
       <div class="flex flex-col items-center gap-4">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
           {#each posts as post}

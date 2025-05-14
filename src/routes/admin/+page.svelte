@@ -66,7 +66,7 @@
             <div class="space-y-1">
               <h2 class="text-xl font-semibold">{post.title}</h2>
               <p class="text-sm text-gray-500">
-                {new Date(post.date).toLocaleDateString()}
+                {new Date(post.createdAt).toLocaleDateString()}
               </p>
             </div>
             <div class="flex items-center gap-2">

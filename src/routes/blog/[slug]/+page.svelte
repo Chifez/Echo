@@ -1,6 +1,7 @@
 <script lang="ts">
   import { ChevronLeft } from 'carbon-icons-svelte';
   import { Button } from '$lib/components/ui/button';
+  import LikeButton from '$lib/components/LikeButton.svelte';
   import { onMount } from 'svelte';
 
   export let data;
@@ -44,9 +45,20 @@
         <Button variant="outline" href="/#posts">Back to Posts</Button>
       </div>
     </div>
-  {:else if data}
+  {:else}
     <article class="py-8">
       <main class="mx-auto max-w-screen-md px-4 lg:px-8">
+        <!-- Banner Image -->
+        {#if data.meta.image?.url}
+          <div class="w-full h-[400px] mb-8 rounded-lg overflow-hidden">
+            <img
+              src={data.meta.image.url}
+              alt={data.meta.title}
+              class="w-full h-full object-cover"
+            />
+          </div>
+        {/if}
+
         <!-- Title -->
         <hgroup
           class="flex flex-col items-center justify-center text-center w-full mb-8"
@@ -64,27 +76,48 @@
 
         <!-- Author Info -->
         <div
-          class="flex items-center justify-start gap-4 my-6 border-y border-gray-200 py-4"
+          class="flex items-center justify-between gap-4 my-6 border-y border-gray-200 py-4"
         >
-          {#if data.meta.avatar}
-            <img
-              src={data.meta.avatar}
-              alt={data.meta.author}
-              class="w-12 h-12 rounded-full"
-            />
-          {/if}
-          <div>
-            <p class="font-semibold">{data.meta.author}</p>
-            {#if data.meta.role}
-              <p class="text-gray-500 text-sm">{data.meta.role}</p>
+          <div class="flex items-center gap-4">
+            {#if data.meta.avatar}
+              <img
+                src={data.meta.avatar}
+                alt={data.meta.author}
+                class="w-12 h-12 rounded-full"
+              />
             {/if}
+            <div>
+              <p class="font-semibold">{data.meta.author}</p>
+              {#if data.meta.role}
+                <p class="text-gray-500 text-sm">{data.meta.role}</p>
+              {/if}
+            </div>
           </div>
+          <LikeButton
+            slug={data.slug}
+            initialLikesCount={data.meta.likesCount}
+          />
         </div>
 
         <!-- Content -->
         <div class="prose prose-lg max-w-none pt-4 pb-8">
           {@html data.content}
         </div>
+
+        <!-- Content Images -->
+        {#if data.meta.contentImages && data.meta.contentImages.length > 0}
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 my-8">
+            {#each data.meta.contentImages as image}
+              <div class="relative aspect-video rounded-lg overflow-hidden">
+                <img
+                  src={image.url}
+                  alt="Content banner"
+                  class="w-full h-full object-cover"
+                />
+              </div>
+            {/each}
+          </div>
+        {/if}
 
         <!-- Tags -->
         {#if data.meta.tags && data.meta.tags.length > 0}

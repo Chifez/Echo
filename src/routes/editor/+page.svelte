@@ -2,23 +2,40 @@
   import { Button } from '$lib/components/ui/button';
   import { Input } from '$lib/components/ui/input';
   import Editor from '$lib/components/editor.svelte';
+  import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+  } from '$lib/components/ui/select';
   import { Card } from '$lib/components/ui/card';
   import { Textarea } from '$lib/components/ui/textarea';
-  import { slugify } from '$lib/utils/helpers';
+  import { calculateReadTime, slugify } from '$lib/utils/helpers';
 
   let title = '';
-  let description = '';
+  let excerpt = '';
+  let category: any = 'development';
   let content = '';
   let tags = '';
-  let bannerImage = '';
+  let likesCount = 0;
+  let image = { url: '', publicId: '' };
   let isPublishing = false;
   let error = '';
+  let isPublished = true;
+  let readTime = '0 mins read';
+
+  const categories = [
+    { value: 'development', label: 'Development' },
+    { value: 'personal', label: 'Personal' },
+  ] as const;
 
   async function handlePublish() {
     try {
       isPublishing = true;
       error = '';
       const slug = slugify(title);
+      readTime = calculateReadTime(content);
       const response = await fetch('/api/posts', {
         method: 'POST',
         headers: {
@@ -26,15 +43,20 @@
         },
         body: JSON.stringify({
           title,
-          description,
+          excerpt,
           content,
-          bannerImage,
+          category,
+          readTime,
+          image,
           slug,
+          likesCount,
           tags: tags.split(',').map((tag) => tag.trim()),
-          author: 'Nwosu Emmanuel',
-          avatar: '/corporate.jpg',
-          role: 'Frontend Engineer',
-          published: true,
+          author: {
+            name: 'Nwosu Emmanuel',
+            avatar: '/corporate.jpg',
+            role: 'Frontend Engineer',
+          },
+          isPublished,
         }),
       });
 
@@ -44,10 +66,13 @@
 
       // Reset form
       title = '';
-      description = '';
+      excerpt = '';
+      isPublished = true;
+      readTime = '0 mins read';
+      category = 'development';
       content = '';
       tags = '';
-      bannerImage = '';
+      image = { url: '', publicId: '' };
     } catch (err: any) {
       error = err.message;
     } finally {
@@ -92,16 +117,42 @@
               id="tags"
             />
           </div>
+          <Select
+            selected={category}
+            onSelectedChange={(cat) => {
+              category = cat?.value;
+            }}
+          >
+            <SelectTrigger class="w-[180px]">
+              <SelectValue placeholder="Select category" />
+            </SelectTrigger>
+            <SelectContent>
+              {#each categories as category}
+                <SelectItem value={category.value}>
+                  {category.label}
+                </SelectItem>
+              {/each}
+            </SelectContent>
+          </Select>
         </div>
 
         <div>
           <label for="description" class="block text-sm font-medium mb-2"
             >Description</label
           >
-          <Textarea
-            bind:value={description}
-            placeholder="Enter post description"
+          <Textarea bind:value={excerpt} placeholder="Enter post description" />
+        </div>
+
+        <div class="flex items-center space-x-2">
+          <input
+            type="checkbox"
+            id="isPublished"
+            bind:checked={isPublished}
+            class="h-4 w-4 rounded border-gray-300"
           />
+          <label for="isPublished" class="text-sm font-medium">
+            Publish immediately
+          </label>
         </div>
       </div>
     </Card>
@@ -110,18 +161,14 @@
       <Editor
         {content}
         onUpdate={(newContent) => (content = newContent)}
-        onBannerImageUpdate={(url) => (bannerImage = url)}
+        onBannerImageUpdate={(url) => (image = url)}
       />
     </Card>
 
     <div class="flex justify-end">
       <Button
         on:click={handlePublish}
-        disabled={isPublishing ||
-          !title ||
-          !description ||
-          !content ||
-          !bannerImage}
+        disabled={isPublishing || !title || !excerpt || !content || !image}
       >
         {isPublishing ? 'Publishing...' : 'Publish Post'}
       </Button>

@@ -62,9 +62,10 @@ export async function POST({ request }) {
     });
 
     if (!result || !result.secure_url) {
+      console.log('upload from api is not working');
       throw new Error('Upload failed - no URL returned');
     }
-
+    console.log('upload from api is working');
     return json({
       success: true,
       url: result.secure_url,

@@ -1,6 +1,12 @@
 <script lang="ts">
   import { Input } from '$lib/components/ui/input';
-  import { Select } from '$lib/components/ui/select/index';
+  import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+  } from '$lib/components/ui/select';
   import { Button } from '$lib/components/ui/button';
   import { createEventDispatcher } from 'svelte';
 
@@ -9,78 +15,107 @@
 
   const dispatch = createEventDispatcher<{
     filter: {
-      type: 'date' | 'tags';
+      type: 'date' | 'tags' | 'category';
       date: 'newest' | 'oldest';
+      category: string;
       tag: string;
     };
   }>();
 
-  let selectedFilter: 'date' | 'tags' = 'date';
-  let dateFilter: 'newest' | 'oldest' = 'newest';
-  let tagSearch = '';
-  let showTagSearch = false;
+  let selectedType: any | undefined = 'date';
+  let selectedDate: any | undefined = 'newest';
+  let selectedCategory: any | undefined = 'all';
+  let selectedTag: any | undefined = '';
+
+  const categories = [
+    { value: 'all', label: 'All Categories' },
+    { value: 'development', label: 'Development' },
+    { value: 'personal', label: 'Personal' },
+  ] as const;
 
   function handleFilter() {
     dispatch('filter', {
-      type: selectedFilter,
-      date: dateFilter,
-      tag: tagSearch,
+      type: selectedType as 'date' | 'tags' | 'category',
+      date: selectedDate as 'newest' | 'oldest',
+      category: selectedCategory,
+      tag: selectedTag,
     });
   }
 
   function handleReset() {
-    selectedFilter = 'date';
-    dateFilter = 'newest';
-    tagSearch = '';
-    showTagSearch = false;
-    dispatch('filter', {
-      type: 'date',
-      date: 'newest',
-      tag: '',
-    });
+    selectedType = 'date';
+    selectedDate = 'newest';
+    selectedCategory = 'all';
+    selectedTag = '';
+    handleFilter();
   }
 
   function handleFilterTypeChange() {
-    showTagSearch = selectedFilter === 'tags';
-    if (!showTagSearch) {
-      tagSearch = '';
-    }
+    // This function is no longer used in the new version
   }
 </script>
 
 <div class="w-full max-w-4xl mx-auto space-y-4 p-4">
-  <div class="flex flex-col md:flex-row gap-4">
-    <select
-      bind:value={selectedFilter}
-      on:change={handleFilterTypeChange}
-      class="w-full md:w-48 p-2 border rounded-md"
+  <div class="flex flex-col md:flex-row gap-4 items-center justify-center mb-8">
+    <!-- Category Filter -->
+    <Select
+      selected={selectedCategory}
+      onSelectedChange={(value) => {
+        selectedCategory = value;
+        handleFilter();
+      }}
     >
-      <option value="date">Filter by Date</option>
-      <option value="tags">Filter by Tags</option>
-    </select>
+      <SelectTrigger class="w-[180px]">
+        <SelectValue placeholder="Select category" />
+      </SelectTrigger>
+      <SelectContent>
+        {#each categories as category}
+          <SelectItem value={category.value}>
+            {category.label}
+          </SelectItem>
+        {/each}
+      </SelectContent>
+    </Select>
 
-    {#if selectedFilter === 'date'}
-      <select
-        bind:value={dateFilter}
-        class="w-full md:w-48 p-2 border rounded-md"
+    <!-- Date Filter -->
+    <Select
+      selected={selectedDate}
+      onSelectedChange={(value) => {
+        selectedDate = value;
+        handleFilter();
+      }}
+    >
+      <SelectTrigger class="w-[180px]">
+        <SelectValue placeholder="Sort by date" />
+      </SelectTrigger>
+      <SelectContent>
+        <SelectItem value="newest">Newest First</SelectItem>
+        <SelectItem value="oldest">Oldest First</SelectItem>
+      </SelectContent>
+    </Select>
+
+    <!-- Tag Filter -->
+    {#if tags.length > 0}
+      <Select
+        selected={selectedTag}
+        onSelectedChange={(value) => {
+          selectedTag = value;
+          handleFilter();
+        }}
       >
-        <option value="newest">Newest First</option>
-        <option value="oldest">Oldest First</option>
-      </select>
-    {:else}
-      <div class="flex-1">
-        <Input
-          type="text"
-          placeholder="Search by tag..."
-          bind:value={tagSearch}
-          class="w-full"
-        />
-      </div>
+        <SelectTrigger class="w-[180px]">
+          <SelectValue placeholder="Filter by tag" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="">All Tags</SelectItem>
+          {#each tags as tag}
+            <SelectItem value={tag}>{tag}</SelectItem>
+          {/each}
+        </SelectContent>
+      </Select>
     {/if}
 
-    <div class="flex gap-2">
-      <Button on:click={handleFilter}>Filter</Button>
-      <Button variant="outline" on:click={handleReset}>Reset</Button>
-    </div>
+    <!-- Reset Button -->
+    <Button variant="outline" on:click={handleReset}>Reset Filters</Button>
   </div>
 </div>

@@ -31,11 +31,14 @@ export async function load({ params }) {
             day: 'numeric',
           }
         ),
-        author: post.author,
-        avatar: post.avatar,
-        role: post.role,
+        author: post.author.name,
+        avatar: post.author.avatar,
+        role: post.author.role,
         tags: post.tags || [],
-        bannerImage: post.bannerImage,
+        bannerImage: post.image?.url || '',
+        image: post.image || { url: '', publicId: '' },
+        contentImages: post.contentImages || [],
+        likesCount: post.likesCount || 0,
       },
       slug: post.slug,
     };

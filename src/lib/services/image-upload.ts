@@ -10,7 +10,7 @@ export async function uploadImage(
   });
 
   const data = await response.json();
-  console.log('upload image', data);
+  console.log('upload from service is', data);
   return {
     url: data.url,
     public_id: data.publicId,
@@ -26,5 +26,6 @@ export async function deleteImage(publicId: string): Promise<{ data: string }> {
     },
   });
   const data = await response.json();
+  console.log('delete from service is', data);
   return { data: data };
 }
