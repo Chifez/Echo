@@ -15,14 +15,17 @@ const handleSession: Handle = async ({ event, resolve }) => {
   ) {
     if (!session) {
       console.log('No session found, redirecting to login');
-      throw redirect(303, '/login');
+      // Store the intended destination in the URL
+      const returnTo = event.url.pathname + event.url.search;
+      throw redirect(303, `/login?returnTo=${encodeURIComponent(returnTo)}`);
     }
 
     try {
       const { user } = JSON.parse(session);
       if (!user) {
         console.log('No user in session, redirecting to login');
-        throw redirect(303, '/login');
+        const returnTo = event.url.pathname + event.url.search;
+        throw redirect(303, `/login?returnTo=${encodeURIComponent(returnTo)}`);
       }
 
       // Check if user is admin
@@ -30,7 +33,8 @@ const handleSession: Handle = async ({ event, resolve }) => {
       event.locals.user = user;
     } catch (error) {
       console.error('Auth error:', error);
-      throw redirect(303, '/login');
+      const returnTo = event.url.pathname + event.url.search;
+      throw redirect(303, `/login?returnTo=${encodeURIComponent(returnTo)}`);
     }
   } else if (session) {
     // For other routes, just set the user if session exists

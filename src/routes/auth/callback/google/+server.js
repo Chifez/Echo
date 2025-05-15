@@ -7,6 +7,9 @@ import {
 
 export async function GET({ url, cookies }) {
   const code = url.searchParams.get('code');
+  const state = url.searchParams.get('state'); // Get the returnTo URL from state
+  const returnTo = state ? decodeURIComponent(state) : '/editor';
+
   const redirectUri =
     process.env.NODE_ENV === 'production'
       ? `${PUBLIC_BASE_URL}/auth/callback/google`
@@ -15,6 +18,7 @@ export async function GET({ url, cookies }) {
   console.log('Callback received with redirect URI:', redirectUri);
   console.log('Using client ID:', PUBLIC_GOOGLE_CLIENT_ID);
   console.log('Environment:', process.env.NODE_ENV);
+  console.log('Returning to:', returnTo);
 
   if (!code) {
     throw redirect(303, '/');
@@ -72,7 +76,8 @@ export async function GET({ url, cookies }) {
       }
     );
 
-    throw redirect(303, '/editor');
+    // Redirect to the intended destination
+    throw redirect(303, returnTo);
   } catch (error) {
     console.error('Auth error:', error);
     throw redirect(303, '/');

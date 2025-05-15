@@ -1,6 +1,10 @@
 <script>
   import { Button } from '$lib/components/ui/button';
   import { PUBLIC_GOOGLE_CLIENT_ID, PUBLIC_BASE_URL } from '$env/static/public';
+  import { page } from '$app/stores';
+
+  // Get the returnTo URL from the query parameters
+  $: returnTo = $page.url.searchParams.get('returnTo') || '/editor';
 
   function handleGoogleLogin() {
     const redirectUri = import.meta.env.PROD
@@ -20,6 +24,8 @@
     url.searchParams.append('response_type', responseType);
     url.searchParams.append('access_type', accessType);
     url.searchParams.append('prompt', prompt);
+    // Add state parameter to preserve returnTo URL
+    url.searchParams.append('state', encodeURIComponent(returnTo));
 
     console.log('Full URL:', url.toString());
     window.location.href = url.toString();
