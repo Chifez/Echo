@@ -58,9 +58,13 @@ export async function GET({ url, cookies }) {
     }
 
     const tokens = await tokenResponse.json();
-    console.log('Token exchange successful');
+    console.log(
+      'Token exchange successful, access token present:',
+      !!tokens.access_token
+    );
 
     // Get user info
+    console.log('Fetching user info...');
     const userResponse = await fetch(
       'https://www.googleapis.com/oauth2/v2/userinfo',
       {
@@ -81,34 +85,51 @@ export async function GET({ url, cookies }) {
     }
 
     const user = await userResponse.json();
-    console.log('User info fetched successfully');
+    console.log('User info fetched successfully:', {
+      email: user.email,
+      name: user.name,
+      hasPicture: !!user.picture,
+    });
+
+    // Prepare session data
+    const sessionData = {
+      user: {
+        email: user.email,
+        name: user.name,
+        picture: user.picture,
+      },
+      accessToken: tokens.access_token,
+    };
+
+    console.log('Preparing to set session cookie with data:', {
+      hasUser: !!sessionData.user,
+      hasEmail: !!sessionData.user.email,
+      hasName: !!sessionData.user.name,
+      hasPicture: !!sessionData.user.picture,
+      hasAccessToken: !!sessionData.accessToken,
+    });
 
     // Set session cookie
-    cookies.set(
-      'session',
-      JSON.stringify({
-        user: {
-          email: user.email,
-          name: user.name,
-          picture: user.picture,
-        },
-        accessToken: tokens.access_token,
-      }),
-      {
-        path: '/',
-        httpOnly: true,
-        sameSite: 'lax',
-        secure: process.env.NODE_ENV === 'production',
-        maxAge: 60 * 60 * 24 * 7, // 1 week
-      }
-    );
+    const cookieValue = JSON.stringify(sessionData);
+    console.log('Cookie value length:', cookieValue.length);
+
+    cookies.set('session', cookieValue, {
+      path: '/',
+      httpOnly: true,
+      sameSite: 'lax',
+      secure: process.env.NODE_ENV === 'production',
+      maxAge: 60 * 60 * 24 * 7, // 1 week
+    });
 
     console.log('Session cookie set, redirecting to:', returnTo);
     // Redirect to the intended destination
     throw redirect(303, returnTo);
   } catch (error) {
     console.error('Auth error:', error);
-    // console.error('Error stack:', error.stack);
+    // Log the specific error message
+    if (error instanceof Error) {
+      console.error('Error message:', error.message);
+    }
     throw redirect(303, '/');
   }
 }

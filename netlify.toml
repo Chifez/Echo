@@ -1,0 +1,4 @@
+[[redirects]]
+  from = "/auth/callback/google"
+  to = "/auth/callback/google"
+  status = 200

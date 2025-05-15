@@ -1,5 +1,6 @@
 // import sequence from 'svelte-sequential-preprocessor';
-import adapter from '@sveltejs/adapter-auto';
+// import adapter from '@sveltejs/adapter-auto';
+import adapter from '@sveltejs/adapter-netlify';
 import { vitePreprocess } from '@sveltejs/vite-plugin-svelte';
 import { mdsvex, escapeSvelte } from 'mdsvex';
 import { getHighlighter } from 'shiki';
@@ -15,22 +16,6 @@ import rehypeSlug from 'rehype-slug';
 // }
 const mdsvexOptions = {
   extensions: ['.md'],
-  // layout: {
-  //   _: './src/mdsvex.svelte',
-  // },
-  // highlight: {
-  //   highlighter: async (code, lang = 'text') => {
-  //     const highlighter = await getHighlighter({
-  //       themes: ['poimandres'],
-  //       langs: ['javascript', 'typescript'],
-  //     });
-  //     await highlighter.loadLanguage('javascript', 'typescript');
-  //     const html = escapeSvelte(
-  //       highlighter.codeToHtml(code, { lang, theme: 'poimandres' })
-  //     );
-  //     return `{@html \`${html}\` }`;
-  //   },
-  // },
   remarkPlugins: [remarkUnwrapImages, [remarkToc, { tight: true }]],
   rehypePlugins: [rehypeSlug],
 };
