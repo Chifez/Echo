@@ -1,9 +1,12 @@
 <script>
   import { Button } from '$lib/components/ui/button';
-  import { PUBLIC_GOOGLE_CLIENT_ID } from '$env/static/public';
+  import { PUBLIC_GOOGLE_CLIENT_ID, PUBLIC_BASE_URL } from '$env/static/public';
 
   function handleGoogleLogin() {
-    const redirectUri = 'http://localhost:5173/auth/callback/google';
+    const redirectUri = import.meta.env.PROD
+      ? `${PUBLIC_BASE_URL}/auth/callback/google`
+      : 'http://localhost:5173/auth/callback/google';
+
     console.log('Redirect URI:', redirectUri);
     const scope = 'email profile';
     const responseType = 'code';
