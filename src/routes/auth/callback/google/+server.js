@@ -6,8 +6,13 @@ import {
 } from '$env/static/public';
 
 export async function GET({ url, cookies }) {
+  console.log('=== OAuth Callback Debug ===');
+  console.log('Full URL:', url.toString());
+  console.log('PUBLIC_BASE_URL:', PUBLIC_BASE_URL);
+  console.log('NODE_ENV:', process.env.NODE_ENV);
+
   const code = url.searchParams.get('code');
-  const state = url.searchParams.get('state'); // Get the returnTo URL from state
+  const state = url.searchParams.get('state');
   const returnTo = state ? decodeURIComponent(state) : '/editor';
 
   const redirectUri =
@@ -15,16 +20,18 @@ export async function GET({ url, cookies }) {
       ? `${PUBLIC_BASE_URL}/auth/callback/google`
       : 'http://localhost:5173/auth/callback/google';
 
-  console.log('Callback received with redirect URI:', redirectUri);
-  console.log('Using client ID:', PUBLIC_GOOGLE_CLIENT_ID);
-  console.log('Environment:', process.env.NODE_ENV);
-  console.log('Returning to:', returnTo);
+  console.log('Constructed redirectUri:', redirectUri);
+  console.log('Code present:', !!code);
+  console.log('State present:', !!state);
+  console.log('ReturnTo:', returnTo);
 
   if (!code) {
+    console.log('No code present, redirecting to home');
     throw redirect(303, '/');
   }
 
   try {
+    console.log('Attempting token exchange...');
     // Exchange code for tokens
     const tokenResponse = await fetch('https://oauth2.googleapis.com/token', {
       method: 'POST',
@@ -40,8 +47,18 @@ export async function GET({ url, cookies }) {
       }),
     });
 
+    if (!tokenResponse.ok) {
+      const errorData = await tokenResponse.json();
+      console.error('Token exchange failed:', errorData);
+      throw new Error(
+        `Token exchange failed: ${
+          errorData.error_description || errorData.error
+        }`
+      );
+    }
+
     const tokens = await tokenResponse.json();
-    console.log('Token response:', tokens);
+    console.log('Token exchange successful');
 
     // Get user info
     const userResponse = await fetch(
@@ -53,8 +70,18 @@ export async function GET({ url, cookies }) {
       }
     );
 
+    if (!userResponse.ok) {
+      const errorData = await userResponse.json();
+      console.error('User info fetch failed:', errorData);
+      throw new Error(
+        `User info fetch failed: ${
+          errorData.error_description || errorData.error
+        }`
+      );
+    }
+
     const user = await userResponse.json();
-    console.log('User info:', user);
+    console.log('User info fetched successfully');
 
     // Set session cookie
     cookies.set(
@@ -76,10 +103,12 @@ export async function GET({ url, cookies }) {
       }
     );
 
+    console.log('Session cookie set, redirecting to:', returnTo);
     // Redirect to the intended destination
     throw redirect(303, returnTo);
   } catch (error) {
     console.error('Auth error:', error);
+    // console.error('Error stack:', error.stack);
     throw redirect(303, '/');
   }
 }
