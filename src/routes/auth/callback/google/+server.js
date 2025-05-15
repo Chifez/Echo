@@ -2,14 +2,19 @@ import { redirect } from '@sveltejs/kit';
 import {
   PUBLIC_GOOGLE_CLIENT_SECRET,
   PUBLIC_GOOGLE_CLIENT_ID,
+  PUBLIC_BASE_URL,
 } from '$env/static/public';
 
 export async function GET({ url, cookies }) {
   const code = url.searchParams.get('code');
-  const redirectUri = 'http://localhost:5173/auth/callback/google';
+  const redirectUri =
+    process.env.NODE_ENV === 'production'
+      ? `${PUBLIC_BASE_URL}/auth/callback/google`
+      : 'http://localhost:5173/auth/callback/google';
 
   console.log('Callback received with redirect URI:', redirectUri);
   console.log('Using client ID:', PUBLIC_GOOGLE_CLIENT_ID);
+  console.log('Environment:', process.env.NODE_ENV);
 
   if (!code) {
     throw redirect(303, '/');
