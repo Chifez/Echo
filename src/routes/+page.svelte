@@ -5,12 +5,22 @@
   import Hero from '$lib/view/hero.svelte';
   import Posts from '$lib/view/post/index.svelte';
   import Work from '$lib/view/work.svelte';
+  import SEO from '$lib/components/SEO.svelte';
 </script>
 
-<svelte:head>
-  <title>Echo. - Personal blog</title>
-  <meta name="description" content="Personal blog for echo" />
-</svelte:head>
+<SEO
+  title="Echo. - Learn, Build, and Share"
+  description="Welcome to my personal blog where I share my thoughts on development, technology, and personal experiences."
+  type="website"
+  keywords={[
+    'blog',
+    'development',
+    'technology',
+    'personal',
+    'web development',
+  ]}
+/>
+
 <div>
   <Navigation />
   <Hero />

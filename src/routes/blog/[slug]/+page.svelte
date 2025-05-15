@@ -2,6 +2,7 @@
   import { ChevronLeft } from 'carbon-icons-svelte';
   import { Button } from '$lib/components/ui/button';
   import LikeButton from '$lib/components/LikeButton.svelte';
+  import SEO from '$lib/components/SEO.svelte';
   import { onMount } from 'svelte';
 
   export let data;
@@ -13,17 +14,16 @@
   });
 </script>
 
-<!-- SEO -->
-<svelte:head>
-  <title>{data?.meta?.title || 'Blog Post'}</title>
-  <meta name="description" content={data?.meta?.description || ''} />
-  <meta property="og:type" content="article" />
-  <meta property="og:title" content={data?.meta?.title || 'Blog Post'} />
-  <meta property="og:description" content={data?.meta?.description || ''} />
-  {#if data?.meta?.bannerImage}
-    <meta property="og:image" content={data.meta.bannerImage} />
-  {/if}
-</svelte:head>
+<SEO
+  title={data?.meta?.title || 'Blog Post'}
+  description={data?.meta?.description || ''}
+  type="article"
+  url={`/blog/${data.slug}`}
+  image={data?.meta?.image?.url || ''}
+  keywords={data?.meta?.tags || []}
+  author={data?.meta?.author}
+  publishedTime={data?.meta?.date}
+/>
 
 <div class="min-h-screen">
   {#if isLoading}
@@ -105,7 +105,7 @@
         </div>
 
         <!-- Content Images -->
-        {#if data.meta.contentImages && data.meta.contentImages.length > 0}
+        <!-- {#if data.meta.contentImages && data.meta.contentImages.length > 0}
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4 my-8">
             {#each data.meta.contentImages as image}
               <div class="relative aspect-video rounded-lg overflow-hidden">
@@ -117,7 +117,7 @@
               </div>
             {/each}
           </div>
-        {/if}
+        {/if} -->
 
         <!-- Tags -->
         {#if data.meta.tags && data.meta.tags.length > 0}

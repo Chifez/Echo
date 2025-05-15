@@ -35,7 +35,6 @@ export async function load({ params }) {
         avatar: post.author.avatar,
         role: post.author.role,
         tags: post.tags || [],
-        bannerImage: post.image?.url || '',
         image: post.image || { url: '', publicId: '' },
         contentImages: post.contentImages || [],
         likesCount: post.likesCount || 0,
