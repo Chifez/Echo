@@ -2,16 +2,29 @@
   import { Button } from '$lib/components/ui/button';
   import { PUBLIC_GOOGLE_CLIENT_ID, PUBLIC_BASE_URL } from '$env/static/public';
   import { page } from '$app/stores';
+  import { onMount } from 'svelte';
 
   // Get the returnTo URL from the query parameters
   $: returnTo = $page.url.searchParams.get('returnTo') || '/editor';
+  let debugInfo = '';
+
+  onMount(() => {
+    debugInfo = `Return To: ${returnTo}, PROD: ${import.meta.env.PROD}, BASE_URL: ${PUBLIC_BASE_URL}`;
+    console.log('Login page mounted');
+    console.log('Return To:', returnTo);
+    console.log('Is Production:', import.meta.env.PROD);
+    console.log('Base URL:', PUBLIC_BASE_URL);
+  });
 
   function handleGoogleLogin() {
     const redirectUri = import.meta.env.PROD
       ? `${PUBLIC_BASE_URL}/auth/callback/google`
       : 'http://localhost:5173/auth/callback/google';
 
+    console.log('Login initiated');
     console.log('Redirect URI:', redirectUri);
+    console.log('Return To:', returnTo);
+    
     const scope = 'email profile';
     const responseType = 'code';
     const accessType = 'offline';
@@ -27,7 +40,7 @@
     // Add state parameter to preserve returnTo URL
     url.searchParams.append('state', encodeURIComponent(returnTo));
 
-    console.log('Full URL:', url.toString());
+    console.log('Full OAuth URL:', url.toString());
     window.location.href = url.toString();
   }
 </script>
@@ -45,7 +58,7 @@
     <div class="mt-8 space-y-6">
       <Button
         on:click={handleGoogleLogin}
-        class="w-full flex justify-center items-center gap-2"
+        class="w-full flex justify-center items-center gap-2 transition-all duration-300 hover:scale-[1.02]"
       >
         <svg class="w-5 h-5" viewBox="0 0 24 24">
           <path
@@ -67,6 +80,13 @@
         </svg>
         Sign in with Google
       </Button>
+      
+      {#if import.meta.env.DEV}
+        <div class="mt-4 p-4 bg-gray-100 rounded text-xs text-gray-600">
+          <p>Debug Info (DEV only):</p>
+          <p>{debugInfo}</p>
+        </div>
+      {/if}
     </div>
   </div>
 </div>

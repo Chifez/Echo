@@ -9,16 +9,22 @@ export async function GET({ url, cookies }) {
   console.log('=== OAuth Callback Debug ===');
   console.log('Full URL:', url.toString());
   console.log('PUBLIC_BASE_URL:', PUBLIC_BASE_URL);
-  console.log('NODE_ENV:', process.env.NODE_ENV);
+  console.log('import.meta.env.PROD:', import.meta.env.PROD);
 
   const code = url.searchParams.get('code');
   const state = url.searchParams.get('state');
-  const returnTo = state ? decodeURIComponent(state) : '/editor';
 
-  const redirectUri =
-    process.env.NODE_ENV === 'production'
-      ? `${PUBLIC_BASE_URL}/auth/callback/google`
-      : 'http://localhost:5173/auth/callback/google';
+  // Debug the state parameter
+  console.log('Raw state parameter:', state);
+
+  // Default to /editor if state is missing
+  const returnTo = state ? decodeURIComponent(state) : '/editor';
+  console.log('Decoded returnTo:', returnTo);
+
+  // Use import.meta.env.PROD for consistency with the login page
+  const redirectUri = import.meta.env.PROD
+    ? `${PUBLIC_BASE_URL}/auth/callback/google`
+    : 'http://localhost:5173/auth/callback/google';
 
   console.log('Constructed redirectUri:', redirectUri);
   console.log('Code present:', !!code);
@@ -48,11 +54,16 @@ export async function GET({ url, cookies }) {
     });
 
     if (!tokenResponse.ok) {
-      const errorData = await tokenResponse.json();
+      const errorData = await tokenResponse.json().catch(() => ({}));
       console.error('Token exchange failed:', errorData);
+      console.error('Token response status:', tokenResponse.status);
+      console.error('Token response status text:', tokenResponse.statusText);
+
       throw new Error(
         `Token exchange failed: ${
-          errorData.error_description || errorData.error
+          errorData.error_description ||
+          errorData.error ||
+          tokenResponse.statusText
         }`
       );
     }
@@ -75,11 +86,13 @@ export async function GET({ url, cookies }) {
     );
 
     if (!userResponse.ok) {
-      const errorData = await userResponse.json();
+      const errorData = await userResponse.json().catch(() => ({}));
       console.error('User info fetch failed:', errorData);
       throw new Error(
         `User info fetch failed: ${
-          errorData.error_description || errorData.error
+          errorData.error_description ||
+          errorData.error ||
+          userResponse.statusText
         }`
       );
     }
@@ -117,7 +130,7 @@ export async function GET({ url, cookies }) {
       path: '/',
       httpOnly: true,
       sameSite: 'lax',
-      secure: process.env.NODE_ENV === 'production',
+      secure: import.meta.env.PROD, // Use import.meta.env.PROD for consistency
       maxAge: 60 * 60 * 24 * 7, // 1 week
     });
 
@@ -129,6 +142,7 @@ export async function GET({ url, cookies }) {
     // Log the specific error message
     if (error instanceof Error) {
       console.error('Error message:', error.message);
+      console.error('Error stack:', error.stack);
     }
     throw redirect(303, '/');
   }
