@@ -1,14 +1,14 @@
 import { redirect } from '@sveltejs/kit';
 import {
-  PUBLIC_GOOGLE_CLIENT_SECRET,
-  PUBLIC_GOOGLE_CLIENT_ID,
-  PUBLIC_BASE_URL,
-} from '$env/static/public';
+  GOOGLE_CLIENT_SECRET,
+  GOOGLE_CLIENT_ID,
+  BASE_URL,
+} from '$env/static/private';
 
 export async function GET({ url, cookies }) {
   console.log('=== OAuth Callback Debug ===');
   console.log('Full URL:', url.toString());
-  console.log('PUBLIC_BASE_URL:', PUBLIC_BASE_URL);
+  console.log('BASE_URL:', BASE_URL);
   console.log('import.meta.env.PROD:', import.meta.env.PROD);
 
   const code = url.searchParams.get('code');
@@ -23,7 +23,7 @@ export async function GET({ url, cookies }) {
 
   // Use import.meta.env.PROD for consistency with the login page
   const redirectUri = import.meta.env.PROD
-    ? `${PUBLIC_BASE_URL}/auth/callback/google`
+    ? `${BASE_URL}/auth/callback/google`
     : 'http://localhost:5173/auth/callback/google';
 
   console.log('Constructed redirectUri:', redirectUri);
@@ -46,8 +46,8 @@ export async function GET({ url, cookies }) {
       },
       body: new URLSearchParams({
         code,
-        client_id: PUBLIC_GOOGLE_CLIENT_ID,
-        client_secret: PUBLIC_GOOGLE_CLIENT_SECRET,
+        client_id: GOOGLE_CLIENT_ID,
+        client_secret: GOOGLE_CLIENT_SECRET,
         redirect_uri: redirectUri,
         grant_type: 'authorization_code',
       }),

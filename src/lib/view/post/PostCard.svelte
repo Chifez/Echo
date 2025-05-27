@@ -31,9 +31,7 @@
   }
 </script>
 
-<article
-  class="flex flex-col h-full bg-white rounded-lg shadow-md overflow-hidden"
->
+<article class="flex flex-col h-full bg-white rounded-lg shadow-md">
   <!-- Image -->
   <div class="relative h-48 w-full">
     <img
@@ -52,7 +50,7 @@
   </div>
 
   <!-- Content -->
-  <div class="flex flex-col flex-grow p-6">
+  <div class="flex flex-col flex-grow h-fit p-6">
     <h2 class="text-xl font-semibold mb-2 line-clamp-2">
       {post.title}
     </h2>
